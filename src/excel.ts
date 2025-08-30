@@ -40,13 +40,18 @@ export async function generateExcelReport(
     console.log(`📄 Log salvo em: ${filePath}`)
 }
 
-export async function excelToJson(filePath: string) {
+export async function excelToJson(filePath: string, rowStart: number) {
     const workbook = XLSX.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+    const allData: { [sheetName: string]: any[] } = {};
 
-    // usa linha 2 como cabeçalho
-    const data = XLSX.utils.sheet_to_json(sheet, { defval: null, range: 1 });
+    workbook.SheetNames.forEach((sheetName) => {
+        const sheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(sheet, {
+            defval: null,
+            range: rowStart - 1,
+        });
+        allData[sheetName] = data;
+    });
 
-    return data;
+    return allData;
 }

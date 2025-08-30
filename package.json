@@ -2,7 +2,8 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "cloneApprovalParameter": "node dist/cloneApprovalParameter.js"
+        "cloneApprovalParameter": "node dist/cloneApprovalParameter.js",
+        "clonePricingRule": "node dist/clonePricingRule.js"
     },
     "dependencies": {
         "@types/jsforce": "^1.11.5",

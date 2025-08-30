@@ -22,7 +22,7 @@ async function main() {
     'destino'
   )
 
-  const lPricebook = await getAllRecords(connDest, ['Id, Name'], 'Pricebook2')
+  const lPricebook = await getAllRecords(connDest, ['Id', 'Name'], 'Pricebook2')
 
   const mPricebookIdByName: Record<string, string> = {}
 
@@ -35,7 +35,7 @@ async function main() {
     }
   }
 
-  const lProduct = await getAllRecords(connDest, ['Id, ProductCode'], 'Product2')
+  const lProduct = await getAllRecords(connDest, ['Id', 'ProductCode'], 'Product2')
   const mProductIdByProductCode: Record<string, string> = {}
 
   for (const product of lProduct) {
@@ -47,7 +47,7 @@ async function main() {
 
   const spinner = ora(`Clonando registros de ${SOBJECT_NAME}...`).start()
 
-  const lExcelRows = await excelToJson(path.join(outputDir, FILE_TO_READ_NAME))
+  const lExcelRows = Object.values(await excelToJson(path.join(outputDir, FILE_TO_READ_NAME), 2))?.[0]
 
   const lApprovalParameterToInsert = []
 
