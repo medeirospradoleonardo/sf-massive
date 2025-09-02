@@ -39,7 +39,7 @@ async function main() {
   const mProductIdByProductCode: Record<string, string> = {}
 
   for (const product of lProduct) {
-    mProductIdByProductCode[product.ProductCode] = product.Id
+    mProductIdByProductCode[product.ProductCode.replace('-', '')] = product.Id
   }
   const mApprovalAuthorityValueByLabel = await getPicklistMap(connDest, SOBJECT_NAME, 'CA_AlcadaAprovacao__c')
 

@@ -43,7 +43,7 @@ async function main() {
   const mProductIdByProductCode: Record<string, string> = {}
 
   for (const product of lProduct) {
-    mProductIdByProductCode[product.ProductCode] = product.Id
+    mProductIdByProductCode[product.ProductCode.replace('-', '')] = product.Id
   }
 
   const lPaymentCondition = await getAllRecords(connDest, ['Id', 'Name'], 'CA_CondicaoPagamento__c')
