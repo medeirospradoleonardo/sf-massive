@@ -55,11 +55,9 @@ async function main() {
 
   const mProductFamilyValueByLabel = await getPicklistMap(connDest, 'Product2', 'Family')
 
-  const outputDir = path.resolve('filesToRead')
+  const inputDir = path.resolve('filesToRead')
 
-  const filePath = path.join(outputDir, FILE_TO_READ_NAME);
-
-  const lExcelSheets = await excelToJson(filePath, 1)
+  const lExcelSheets = await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 1)
 
   const mLabelsByProductFamily: Record<string, string[]> = {}
   const mRangesByProductFamily: Record<string, any[]> = {}

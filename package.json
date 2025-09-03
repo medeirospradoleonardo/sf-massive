@@ -3,7 +3,8 @@
     "scripts": {
         "build": "tsc",
         "cloneApprovalParameter": "node dist/cloneApprovalParameter.js",
-        "clonePricingRule": "node dist/clonePricingRule.js"
+        "clonePricingRule": "node dist/clonePricingRule.js",
+        "updateBonusPrice": "node dist/updateBonusPrice.js"
     },
     "dependencies": {
         "@types/jsforce": "^1.11.5",

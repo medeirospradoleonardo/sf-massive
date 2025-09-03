@@ -43,11 +43,11 @@ async function main() {
   }
   const mApprovalAuthorityValueByLabel = await getPicklistMap(connDest, SOBJECT_NAME, 'CA_AlcadaAprovacao__c')
 
-  const outputDir = path.resolve('filesToRead')
+  const inputDir = path.resolve('filesToRead')
 
   const spinner = ora(`Clonando registros de ${SOBJECT_NAME}...`).start()
 
-  const lExcelRows = Object.values(await excelToJson(path.join(outputDir, FILE_TO_READ_NAME), 2))?.[0]
+  const lExcelRows = Object.values(await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 2))?.[0]
 
   const lApprovalParameterToInsert = []
 
