@@ -34,7 +34,7 @@ async function main() {
 
         const productCode = excelRow['Código'];
         const productId = mProductIdByProductCode[excelRow['Código']];
-        const bonusPrice = excelRow[' Unit _1'];
+        const bonusPrice = Number.parseFloat(excelRow[' Unit _1']).toFixed(2);
 
         if (/PA|PR/.test(productCode)) {
             console.log(`${productCode} ${productId} ${bonusPrice}`)
