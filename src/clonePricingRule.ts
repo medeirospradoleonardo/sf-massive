@@ -8,7 +8,7 @@ const FILE_TO_READ_NAME = 'tabela_vendas_2025_V4_AGOSTO.xlsx'
 const PRICEBOOK_NAME = 'Geral' as 'Distribuidores' | 'Geral' | 'Speaker'
 
 const translatePaymentCondition: Record<string, string> = {
-  'À VISTA': 'À Vista',
+  'À VISTA': 'À vista',
   '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
   '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
 }
@@ -16,7 +16,7 @@ const translatePaymentCondition: Record<string, string> = {
 const translatePricebook: Record<string, string> = {
   'Distribuidores': 'Catálogo distribuidores',
   'Geral': 'Catálogo geral',
-  'Speaker': 'Catálogo speakers oficial'
+  'Speaker': 'Catálogo Speakers oficial'
 }
 
 async function main() {

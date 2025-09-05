@@ -12,7 +12,7 @@ const SOBJECT_NAME = 'CA_ParametroAprovacao__c'
 const translatePricebook: Record<string, string> = {
   'Distribuidores': 'Catálogo distribuidores',
   'Geral': 'Catálogo geral',
-  'Speaker': 'Catálogo speakers oficial'
+  'Speaker': 'Catálogo Speakers oficial'
 }
 
 async function main() {
