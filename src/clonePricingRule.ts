@@ -155,6 +155,8 @@ async function main() {
 
     for (const row of lRows) {
       const isPouch = labels.includes('POUCH')
+      const productCode = row[Object.keys(row)?.[0]];
+
       for (let i = 0; i < labels.length; i++) {
         const label = labels[i]
         const range = ranges[i]
@@ -166,7 +168,7 @@ async function main() {
         const pricingRuleItem = {
           Price__c: isPouch ? (i == 0 ? price : price / 10) : price,
           PricingRule__c: mPricingRuleIdByCustomizedId[key],
-          Product__c: mProductIdByProductCode[row[Object.keys(row)?.[0]]]
+          Product__c: mProductIdByProductCode[productCode]
         }
 
         lPricingRuleItemToInsert.push(pricingRuleItem)
