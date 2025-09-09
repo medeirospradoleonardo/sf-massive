@@ -5,7 +5,6 @@ import { getAllRecords, getPicklistMap, insertRecords, parseLabelsNormal, parseL
 import { loginToOrg } from './auth.js';
 
 const FILE_TO_READ_NAME = 'tabela_vendas_2025_V4_AGOSTO.xlsx'
-const PRICEBOOK_NAME = 'Geral' as 'Distribuidores' | 'Geral' | 'Speaker'
 
 const translatePaymentCondition: Record<string, string> = {
   'À VISTA': 'À vista',
