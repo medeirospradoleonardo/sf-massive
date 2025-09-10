@@ -4,6 +4,40 @@ import { generateExcelReport, RecordResult } from "./excel.js"
 
 export type SObjectRecord = Record<string, any>
 
+export const translatePricebookQA: Record<string, string> = {
+    'Distribuidores': 'Catálogo distribuidores',
+    'Geral': 'Catálogo geral',
+    'Speaker': 'Catálogo Speakers oficial'
+}
+
+export const translatePricebookDEV: Record<string, string> = {
+    'Distribuidores': 'Catálogo distribuidores',
+    'Geral': 'Catálogo geral',
+    'Speaker': 'Catálogo speakers oficial'
+}
+
+export const translatePricebookByUser: Record<string, Record<string, string>> = {
+    'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
+    'leonardo@visumdigital.pharmaesthetics.qa': translatePricebookQA,
+}
+
+export const translatePaymentConditionQA: Record<string, string> = {
+    'À VISTA': 'À vista',
+    '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
+    '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
+}
+
+export const translatePaymentConditionDEV: Record<string, string> = {
+    'À VISTA': 'À Vista',
+    '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
+    '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
+}
+
+export const translatePaymentConditionByUser: Record<string, Record<string, string>> = {
+    'leonardo@visumdigital.com.pharmaestheticsdev': translatePaymentConditionDEV,
+    'leonardo@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,
+}
+
 export function chunkArray<T>(array: T[], size: number): T[][] {
     return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
         array.slice(i * size, i * size + size)

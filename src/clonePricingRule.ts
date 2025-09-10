@@ -1,44 +1,10 @@
 import 'dotenv/config'
 import path from 'path'
 import { excelToJson } from './excel.js';
-import { getAllRecords, getPicklistMap, insertRecords, parseLabelsNormal, parseLabelsWithPouch, parsePrice } from './utils.js';
+import { getAllRecords, getPicklistMap, insertRecords, parseLabelsNormal, parseLabelsWithPouch, parsePrice, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js';
 import { loginToOrg } from './auth.js';
 
 const FILE_TO_READ_NAME = 'tabela_vendas_2025_V4_AGOSTO.xlsx'
-
-const translatePaymentConditionQA: Record<string, string> = {
-  'À VISTA': 'À vista',
-  '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
-  '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
-}
-
-const translatePaymentConditionDEV: Record<string, string> = {
-  'À VISTA': 'À Vista',
-  '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
-  '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
-}
-
-const translatePaymentConditionByUser: Record<string, Record<string, string>> = {
-  'leonardo@visumdigital.com.pharmaestheticsdev': translatePaymentConditionDEV,
-  'leonardo@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,
-}
-
-const translatePricebookQA: Record<string, string> = {
-  'Distribuidores': 'Catálogo distribuidores',
-  'Geral': 'Catálogo geral',
-  'Speaker': 'Catálogo Speakers oficial'
-}
-
-const translatePricebookDEV: Record<string, string> = {
-  'Distribuidores': 'Catálogo distribuidores',
-  'Geral': 'Catálogo geral',
-  'Speaker': 'Catálogo speakers oficial'
-}
-
-const translatePricebookByUser: Record<string, Record<string, string>> = {
-  'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
-  'leonardo@visumdigital.pharmaesthetics.qa': translatePricebookQA,
-}
 
 async function main() {
   const connDest = await loginToOrg(

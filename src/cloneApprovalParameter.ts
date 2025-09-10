@@ -2,29 +2,12 @@ import 'dotenv/config'
 import { loginToOrg } from './auth.js'
 import { excelToJson, generateExcelReport } from './excel.js'
 import path from 'path'
-import { chunkArray, getAllRecords, getPicklistMap, parsePercent } from './utils.js'
+import { chunkArray, getAllRecords, getPicklistMap, parsePercent, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
 const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v23.xlsx'
 const SOBJECT_NAME = 'CA_ParametroAprovacao__c'
-
-const translatePricebookQA: Record<string, string> = {
-  'Distribuidores': 'Catálogo distribuidores',
-  'Geral': 'Catálogo geral',
-  'Speaker': 'Catálogo Speakers oficial'
-}
-
-const translatePricebookDEV: Record<string, string> = {
-  'Distribuidores': 'Catálogo distribuidores',
-  'Geral': 'Catálogo geral',
-  'Speaker': 'Catálogo speakers oficial'
-}
-
-const translatePricebookByUser: Record<string, Record<string, string>> = {
-  'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
-  'leonardo@visumdigital.pharmaesthetics.qa': translatePricebookQA,
-}
 
 async function main() {
   const connDest = await loginToOrg(
@@ -34,6 +17,7 @@ async function main() {
   )
 
   const translatePricebook = translatePricebookByUser[process.env.SF_DEST_USERNAME] || translatePricebookQA
+  const translatePaymentCondition = translatePaymentConditionByUser[process.env.SF_DEST_USERNAME] || translatePaymentConditionQA
 
   const lPricebook = await getAllRecords(connDest, ['Id', 'Name'], 'Pricebook2')
 
@@ -75,6 +59,7 @@ async function main() {
       CA_PorcentagemInicialDesconto__c: parsePercent(excelRow['Porcentagem de desconto mínima']),
       CA_PorcentagemFinalDesconto__c: parsePercent(excelRow['Porcentagem de desconto máxima']),
       CA_AlcadaAprovacao__c: mApprovalAuthorityValueByLabel[excelRow['Alçada de aprovação']],
+      // PaymentCondition__c: translatePaymentCondition[excelRow['Condição de pagamento']]
     })
   }
 
