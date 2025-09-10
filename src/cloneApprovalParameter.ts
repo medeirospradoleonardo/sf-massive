@@ -9,10 +9,21 @@ import ora from 'ora'
 const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v23.xlsx'
 const SOBJECT_NAME = 'CA_ParametroAprovacao__c'
 
-const translatePricebook: Record<string, string> = {
+const translatePricebookQA: Record<string, string> = {
+  'Distribuidores': 'Catálogo distribuidores',
+  'Geral': 'Catálogo geral',
+  'Speaker': 'Catálogo Speakers oficial'
+}
+
+const translatePricebookDEV: Record<string, string> = {
   'Distribuidores': 'Catálogo distribuidores',
   'Geral': 'Catálogo geral',
   'Speaker': 'Catálogo speakers oficial'
+}
+
+const translatePricebookByUser: Record<string, Record<string, string>> = {
+  'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
+  'leonardo@visumdigital.pharmaesthetics.qa': translatePricebookQA,
 }
 
 async function main() {
@@ -21,6 +32,8 @@ async function main() {
     process.env.SF_DEST_PASSWORD!,
     'destino'
   )
+
+  const translatePricebook = translatePricebookByUser[process.env.SF_DEST_USERNAME] || translatePricebookQA
 
   const lPricebook = await getAllRecords(connDest, ['Id', 'Name'], 'Pricebook2')
 
