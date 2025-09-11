@@ -10,6 +10,8 @@ const filesNamesByPricebook: Record<string, string> = {
   'Speaker': 'tabela_vendas_2025_V4_AGOSTO.xlsx'
 }
 
+const familyWithDiscountTax = ['VISALIFT']
+
 async function main() {
   const connDest = await loginToOrg(
     process.env.SF_DEST_USERNAME!,
@@ -111,11 +113,13 @@ async function main() {
           To__c: parseInt(range.to),
           From__c: parseInt(range.from),
           ProductFamily__c: productFamily,
-          Pricebook__c: mPricebookIdByName[pricebookName]
+          Pricebook__c: mPricebookIdByName[pricebookName],
+          DiscountTax__c: familyWithDiscountTax.includes(productFamily)
         } : {
           ProductFamily__c: productFamily,
           PaymentCondition__c: range,
-          Pricebook__c: mPricebookIdByName[pricebookName]
+          Pricebook__c: mPricebookIdByName[pricebookName],
+          DiscountTax__c: familyWithDiscountTax.includes(productFamily)
         }
 
         if (!mListPricingRuleByProductFamily[productFamily]) {
