@@ -25,12 +25,18 @@ export const translatePaymentConditionQA: Record<string, string> = {
     'À VISTA': 'À vista',
     '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
     '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
+    'A Vista': 'À vista',
+    'Entrada +6x': '30% Entrada +6x Sem Juros',
+    'Entrada +10x': '25% Entrada +10x Sem Juros',
 }
 
 export const translatePaymentConditionDEV: Record<string, string> = {
     'À VISTA': 'À Vista',
     '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
     '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
+    'A Vista': 'À Vista',
+    'Entrada +6x': '30% Entrada +6x Sem Juros',
+    'Entrada +10x': '25% Entrada +10x Sem Juros',
 }
 
 export const translatePaymentConditionByUser: Record<string, Record<string, string>> = {

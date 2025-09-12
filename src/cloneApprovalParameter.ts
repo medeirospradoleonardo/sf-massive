@@ -6,7 +6,7 @@ import { chunkArray, getAllRecords, getPicklistMap, parsePercent, translatePayme
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
-const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v23.xlsx'
+const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v27.xlsx'
 const SOBJECT_NAME = 'CA_ParametroAprovacao__c'
 
 async function main() {
@@ -38,6 +38,14 @@ async function main() {
   for (const product of lProduct) {
     mProductIdByProductCode[product.ProductCode.replace('-', '')] = product.Id
   }
+
+  const lPaymentCondition = await getAllRecords(connDest, ['Id', 'Name'], 'CA_CondicaoPagamento__c')
+  const mPaymentConditionIdByName: Record<string, string> = {}
+
+  for (const paymentCondition of lPaymentCondition) {
+    mPaymentConditionIdByName[paymentCondition.Name] = paymentCondition.Id
+  }
+
   const mApprovalAuthorityValueByLabel = await getPicklistMap(connDest, SOBJECT_NAME, 'CA_AlcadaAprovacao__c')
 
   const inputDir = path.resolve('filesToRead')
@@ -56,10 +64,10 @@ async function main() {
       CA_PrecVendaMaximo__c: excelRow['Preço de venda máximo'],
       CA_QuantidadeMinima__c: excelRow['Quantidade mínima'],
       CA_QuantidadeMaxima__c: excelRow['Quantidade máxima'],
-      CA_PorcentagemInicialDesconto__c: parsePercent(excelRow['Porcentagem de desconto mínima']),
+      CA_PorcentagemInicialDesconto__c: parsePercent(excelRow['Porcentágem de desconto mínima']),
       CA_PorcentagemFinalDesconto__c: parsePercent(excelRow['Porcentagem de desconto máxima']),
       CA_AlcadaAprovacao__c: mApprovalAuthorityValueByLabel[excelRow['Alçada de aprovação']],
-      // PaymentCondition__c: translatePaymentCondition[excelRow['Condição de pagamento']]
+      PaymentCondition__c: mPaymentConditionIdByName[translatePaymentCondition[excelRow['Condição de Pagamento']]]
     })
   }
 
