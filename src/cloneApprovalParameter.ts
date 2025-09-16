@@ -6,7 +6,7 @@ import { chunkArray, getAllRecords, getPicklistMap, parsePercent, translateAppro
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
-const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v27.xlsx'
+const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v29.xlsx'
 const SOBJECT_NAME = 'CA_ParametroAprovacao__c'
 
 async function main() {

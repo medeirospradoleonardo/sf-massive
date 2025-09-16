@@ -6,7 +6,7 @@ import { chunkArray, getAllRecords } from './utils.js'
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
-const FILE_TO_READ_NAME = 'Controle de Estoque  Pharmaesthetics 2025 - 07 2025 - Sem Vinculo - V2.xlsx'
+const FILE_TO_READ_NAME = 'Tabela Bonificação v01.xlsx'
 
 async function main() {
     const connDest = await loginToOrg(
@@ -26,7 +26,7 @@ async function main() {
 
     const spinner = ora(`Atualizando os BonusPrice__c...`).start();
 
-    const lExcelRows = Object.values(await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 6))?.[0];
+    const lExcelRows = Object.values(await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 1))?.[0];
 
     const lProductsToUpdate = [];
 
@@ -34,7 +34,7 @@ async function main() {
 
         const productCode = excelRow['Código'];
         const productId = mProductIdByProductCode[excelRow['Código']];
-        const bonusPrice = Number.parseFloat(excelRow[' Unit _1']).toFixed(2);
+        const bonusPrice = Number.parseFloat(excelRow['Preço Bonificação']).toFixed(2);
 
         if (/PA|PR/.test(productCode)) {
             console.log(`${productCode} ${productId} ${bonusPrice}`)
