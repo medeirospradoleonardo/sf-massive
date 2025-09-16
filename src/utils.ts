@@ -39,6 +39,16 @@ export const translatePaymentConditionDEV: Record<string, string> = {
     'Entrada +10x': '25% Entrada +10x Sem Juros',
 }
 
+export const translateApprovalLevel: Record<string, string> = {
+    'Consultor': 'Consultor',
+    'Gerente Regional': 'Gerente regional',
+    'Gerente regional': 'Gerente regional',
+    'Gerente Nacional': 'Gerente nacional',
+    'Gerente nacional': 'Gerente nacional',
+    'Diretoria': 'Diretoria',
+    'Diretor': 'Diretoria',
+}
+
 export const translatePaymentConditionByUser: Record<string, Record<string, string>> = {
     'leonardo@visumdigital.com.pharmaestheticsdev': translatePaymentConditionDEV,
     'leonardo@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,

@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { loginToOrg } from './auth.js'
 import { excelToJson, generateExcelReport } from './excel.js'
 import path from 'path'
-import { chunkArray, getAllRecords, getPicklistMap, parsePercent, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
+import { chunkArray, getAllRecords, getPicklistMap, parsePercent, translateApprovalLevel, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
@@ -66,7 +66,7 @@ async function main() {
       CA_QuantidadeMaxima__c: excelRow['Quantidade máxima'],
       CA_PorcentagemInicialDesconto__c: parsePercent(excelRow['Porcentágem de desconto mínima']),
       CA_PorcentagemFinalDesconto__c: parsePercent(excelRow['Porcentagem de desconto máxima']),
-      CA_AlcadaAprovacao__c: mApprovalAuthorityValueByLabel[excelRow['Alçada de aprovação']],
+      CA_AlcadaAprovacao__c: mApprovalAuthorityValueByLabel[translateApprovalLevel[excelRow['Alçada de aprovação']]],
       PaymentCondition__c: mPaymentConditionIdByName[translatePaymentCondition[excelRow['Condição de Pagamento']]]
     })
   }
