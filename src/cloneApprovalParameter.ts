@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { loginToOrg } from './auth.js'
 import { excelToJson, generateExcelReport } from './excel.js'
 import path from 'path'
-import { chunkArray, getAllRecords, getPicklistMap, parsePercent, translateApprovalLevel, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
+import { chunkArray, getAllRecords, getMapPaymentConditionIdByName, getMapPricebookIdByName, getMapProductByName, getPicklistMap, parsePercent, translateApprovalLevel, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
@@ -16,35 +16,9 @@ async function main() {
     'destino'
   )
 
-  const translatePricebook = translatePricebookByUser[process.env.SF_DEST_USERNAME] || translatePricebookQA
-  const translatePaymentCondition = translatePaymentConditionByUser[process.env.SF_DEST_USERNAME] || translatePaymentConditionQA
-
-  const lPricebook = await getAllRecords(connDest, ['Id', 'Name'], 'Pricebook2')
-
-  const mPricebookIdByName: Record<string, string> = {}
-
-  for (const [key, translatedName] of Object.entries(translatePricebook)) {
-    const pb = lPricebook.find(p => p.Name === translatedName)
-    if (pb) {
-      mPricebookIdByName[key] = pb.Id
-    } else {
-      console.warn(`⚠️ Pricebook não encontrado para "${translatedName}"`)
-    }
-  }
-
-  const lProduct = await getAllRecords(connDest, ['Id', 'ProductCode'], 'Product2')
-  const mProductIdByProductCode: Record<string, string> = {}
-
-  for (const product of lProduct) {
-    mProductIdByProductCode[product.ProductCode.replace('-', '')] = product.Id
-  }
-
-  const lPaymentCondition = await getAllRecords(connDest, ['Id', 'Name'], 'CA_CondicaoPagamento__c')
-  const mPaymentConditionIdByName: Record<string, string> = {}
-
-  for (const paymentCondition of lPaymentCondition) {
-    mPaymentConditionIdByName[paymentCondition.Name] = paymentCondition.Id
-  }
+  const mPricebookIdByName = await getMapPricebookIdByName(connDest);
+  const mProductByProductCode = await getMapProductByName(connDest);
+  const mPaymentConditionIdByName = await getMapPaymentConditionIdByName(connDest);
 
   const mApprovalAuthorityValueByLabel = await getPicklistMap(connDest, SOBJECT_NAME, 'CA_AlcadaAprovacao__c')
 
@@ -59,7 +33,7 @@ async function main() {
   for (const excelRow of lExcelRows) {
     lApprovalParameterToInsert.push({
       CA_CatalagoPrecos__c: mPricebookIdByName[excelRow['Catálogo de preços']],
-      CA_Produto__c: mProductIdByProductCode[excelRow['Código do produto']],
+      CA_Produto__c: mProductByProductCode[excelRow['Código do produto']]?.Id,
       CA_PrecoVendaMinimo__c: excelRow['Preço de venda mínimo'],
       CA_PrecVendaMaximo__c: excelRow['Preço de venda máximo'],
       CA_QuantidadeMinima__c: excelRow['Quantidade mínima'],
@@ -67,7 +41,7 @@ async function main() {
       CA_PorcentagemInicialDesconto__c: parsePercent(excelRow['Porcentágem de desconto mínima']),
       CA_PorcentagemFinalDesconto__c: parsePercent(excelRow['Porcentagem de desconto máxima']),
       CA_AlcadaAprovacao__c: mApprovalAuthorityValueByLabel[translateApprovalLevel[excelRow['Alçada de aprovação']]],
-      PaymentCondition__c: mPaymentConditionIdByName[translatePaymentCondition[excelRow['Condição de Pagamento']]]
+      PaymentCondition__c: mPaymentConditionIdByName[excelRow['Condição de Pagamento']]
     })
   }
 

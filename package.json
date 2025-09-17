@@ -3,7 +3,7 @@
     "scripts": {
         "build": "tsc",
         "cloneApprovalParameter": "node dist/cloneApprovalParameter.js",
-        "clonePricingRule": "node dist/clonePricingRule.js",
+        "clonePricingRule": "node dist/clonePricingRuleWithApprovalTable.js",
         "updateBonusPrice": "node dist/updateBonusPrice.js"
     },
     "dependencies": {

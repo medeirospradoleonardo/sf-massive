@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import path from 'path'
 import { excelToJson } from './excel.js';
-import { getAllRecords, getPicklistMap, insertRecords, parseLabelsNormal, parseLabelsWithPouch, parsePrice, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js';
+import { getAllRecords, getMapPaymentConditionIdByName, getMapPricebookIdByName, getMapProductByName, getPicklistMap, insertRecords, parseLabelsNormal, parseLabelsWithPouch, parsePrice, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js';
 import { loginToOrg } from './auth.js';
 
 const filesNamesByPricebook: Record<string, string> = {
@@ -19,35 +19,9 @@ async function main() {
     'destino'
   )
 
-  const translatePricebook = translatePricebookByUser[process.env.SF_DEST_USERNAME] || translatePricebookQA
-  const translatePaymentCondition = translatePaymentConditionByUser[process.env.SF_DEST_USERNAME] || translatePaymentConditionQA
-
-  const lPricebook = await getAllRecords(connDest, ['Id', 'Name'], 'Pricebook2')
-
-  const mPricebookIdByName: Record<string, string> = {}
-
-  for (const [key, translatedName] of Object.entries(translatePricebook)) {
-    const pb = lPricebook.find(p => p.Name === translatedName)
-    if (pb) {
-      mPricebookIdByName[key] = pb.Id
-    } else {
-      console.warn(`⚠️ Pricebook não encontrado para "${translatedName}"`)
-    }
-  }
-
-  const lProduct = await getAllRecords(connDest, ['Id', 'ProductCode'], 'Product2')
-  const mProductIdByProductCode: Record<string, string> = {}
-
-  for (const product of lProduct) {
-    mProductIdByProductCode[product.ProductCode.replace('-', '')] = product.Id
-  }
-
-  const lPaymentCondition = await getAllRecords(connDest, ['Id', 'Name'], 'CA_CondicaoPagamento__c')
-  const mPaymentConditionIdByName: Record<string, string> = {}
-
-  for (const paymentCondition of lPaymentCondition) {
-    mPaymentConditionIdByName[paymentCondition.Name] = paymentCondition.Id
-  }
+  const mPricebookIdByName = await getMapPricebookIdByName(connDest);
+  const mProductByProductCode = await getMapProductByName(connDest);
+  const mPaymentConditionIdByName = await getMapPaymentConditionIdByName(connDest);
 
   const mProductFamilyValueByLabel = await getPicklistMap(connDest, 'Product2', 'Family')
 
@@ -96,13 +70,13 @@ async function main() {
       } else {
         labels = Object.keys(excelRow).filter(key => {
           const keyFormatted = key.replace(/\r?\n/g, ' ').trim()
-          return !quantityLabels.includes(keyFormatted) && translatePaymentCondition[keyFormatted] !== undefined;
+          return !quantityLabels.includes(keyFormatted) && keyFormatted !== undefined;
         })
       }
 
       const hasPouch = quantityLabels.some(l => l.trim().toUpperCase() === "POUCH");
 
-      ranges = hasPouch ? parseLabelsWithPouch(labels) : parseLabelsNormal(labels, mPaymentConditionIdByName, translatePaymentCondition)
+      ranges = hasPouch ? parseLabelsWithPouch(labels) : parseLabelsNormal(labels, mPaymentConditionIdByName)
 
       mLabelsByProductFamily[productFamily] = labels
       mRangesByProductFamily[productFamily] = ranges
@@ -175,7 +149,7 @@ async function main() {
           const pricingRuleItem = {
             Price__c: isPouch ? (i == 0 ? price : price / 10) : price,
             PricingRule__c: mPricingRuleIdByCustomizedId[key],
-            Product__c: mProductIdByProductCode[productCode]
+            Product__c: mProductByProductCode[productCode]?.Id
           }
 
           lPricingRuleItemToInsert.push(pricingRuleItem)

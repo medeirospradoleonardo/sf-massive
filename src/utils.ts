@@ -122,7 +122,7 @@ export function parsePrice(input: string | number): number {
     return isNaN(price) ? 0 : price;
 }
 
-export function parseLabelsNormal(labels: string[], mPaymentConditionIdByName = {}, translatePaymentCondition = {}) {
+export function parseLabelsNormal(labels: string[], mPaymentConditionIdByName = {}) {
     const ranges = [];
     const otherIds = [];
     let previousTo = null;
@@ -148,8 +148,8 @@ export function parseLabelsNormal(labels: string[], mPaymentConditionIdByName = 
             to = null;
         }
         // --- IDs ---
-        else if (mPaymentConditionIdByName[translatePaymentCondition[label]] !== undefined) {
-            otherIds.push(mPaymentConditionIdByName[translatePaymentCondition[label]]);
+        else if (mPaymentConditionIdByName[label] !== undefined) {
+            otherIds.push(mPaymentConditionIdByName[label]);
             continue;
         } else {
             continue; // ignora se não é faixa nem ID
@@ -200,47 +200,99 @@ export function parseLabelsWithPouch(labels: string[]) {
 }
 
 export async function insertRecords(connDest: Connection, pSObjectName: string, plRecords: SObjectRecord[]): Promise<string[]> {
-    const spinner = ora(`Clonando registros de ${pSObjectName}...`).start()
-    spinner.succeed(`Encontrados ${plRecords.length} registros de ${pSObjectName} para inserir`)
+    const spinner = ora(`Clonando registros de ${pSObjectName}...`).start();
+    spinner.succeed(`Encontrados ${plRecords.length} registros de ${pSObjectName} para inserir`);
 
-    let totalSuccess = 0
+    let totalSuccess = 0;
 
-    const batchSize = 200
-    let totalResult = []
+    const batchSize = 200;
+    let totalResult = [];
 
-    const chunks = chunkArray(plRecords, batchSize)
-    const recordIds = []
+    const chunks = chunkArray(plRecords, batchSize);
+    const recordIds = [];
 
     for (const [index, chunk] of chunks.entries()) {
-        const result = await connDest.sobject(pSObjectName).create(chunk, { allOrNone: false })
+        const result = await connDest.sobject(pSObjectName).create(chunk, { allOrNone: false });
 
-        const insertResult: RecordResult[] = []
+        const insertResult: RecordResult[] = [];
 
         for (let i = 0; i < result.length; i++) {
-            const res = result[i]
+            const res = result[i];
             insertResult.push({
                 Inserido: res.success ? '✅' : '❌',
                 IdSalesforce: res.id,
                 Erro: res.errors?.[0]?.message
-            })
-
-            recordIds.push(res.id)
+            });
 
             if (!res.success) {
                 continue;
             }
 
-            totalSuccess++
+            recordIds.push(res.id);
+
+            totalSuccess++;
         }
 
-        totalResult.push(...insertResult)
+        totalResult.push(...insertResult);
 
-        ora().info(`Chunk ${index + 1}/${chunks.length} finalizada: ${insertResult.filter(r => r.Inserido === '✅').length} processados com sucesso!`)
+        ora().info(`Chunk ${index + 1}/${chunks.length} finalizada: ${insertResult.filter(r => r.Inserido === '✅').length} processados com sucesso!`);
     }
 
-    ora().succeed(`✅ Total inserido na org destino: ${totalSuccess}`)
+    ora().succeed(`✅ Total inserido na org destino: ${totalSuccess}`);
 
-    await generateExcelReport(pSObjectName, plRecords, totalResult)
+    await generateExcelReport(pSObjectName, plRecords, totalResult);
 
     return recordIds
+}
+
+export async function getMapPricebookIdByName(connDest: Connection) {
+
+    const translatePricebook = translatePricebookByUser[process.env.SF_DEST_USERNAME] || translatePricebookQA;
+
+    const lPricebook = await getAllRecords(connDest, ['Id', 'Name'], 'Pricebook2');
+
+    const mPricebookIdByName: Record<string, string> = {};
+
+    for (const [key, translatedName] of Object.entries(translatePricebook)) {
+        const pb = lPricebook.find(p => p.Name === translatedName);
+        if (pb) {
+            mPricebookIdByName[key] = pb.Id;
+        } else {
+            console.warn(`⚠️ Pricebook não encontrado para "${translatedName}"`);
+        }
+    }
+
+    return mPricebookIdByName
+}
+
+export async function getMapPaymentConditionIdByName(connDest: Connection) {
+
+    const translatePaymentCondition = translatePaymentConditionByUser[process.env.SF_DEST_USERNAME] || translatePaymentConditionQA;
+
+    const lPaymentCondition = await getAllRecords(connDest, ['Id', 'Name'], 'CA_CondicaoPagamento__c');
+
+    const mPaymentConditionIdByName: Record<string, string> = {};
+
+    for (const [key, translatedName] of Object.entries(translatePaymentCondition)) {
+        const pb = lPaymentCondition.find(p => p.Name === translatedName);
+        if (pb) {
+            mPaymentConditionIdByName[key] = pb.Id;
+        } else {
+            console.warn(`⚠️ Condição de pagamento não encontrada para "${translatedName}"`);
+        }
+    }
+
+    return mPaymentConditionIdByName
+}
+
+export async function getMapProductByName(connDest: Connection) {
+    const lProduct = await getAllRecords(connDest, ['Id', 'ProductCode', 'Family'], 'Product2');
+
+    const mProductByProductCode: Record<string, SObjectRecord> = {};
+
+    for (const product of lProduct) {
+        mProductByProductCode[product.ProductCode.replace('-', '')] = product;
+    }
+
+    return mProductByProductCode
 }
