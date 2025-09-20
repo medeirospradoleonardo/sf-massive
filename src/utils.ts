@@ -4,6 +4,12 @@ import { generateExcelReport, RecordResult } from "./excel.js"
 
 export type SObjectRecord = Record<string, any>
 
+export const translatePricebookPROD: Record<string, string> = {
+    'Distribuidores': 'Catálogo distribuidores',
+    'Geral': 'Catálogo geral',
+    'Speaker': 'Catálogo speakers oficial'
+}
+
 export const translatePricebookQA: Record<string, string> = {
     'Distribuidores': 'Catálogo distribuidores',
     'Geral': 'Catálogo geral',
@@ -17,8 +23,18 @@ export const translatePricebookDEV: Record<string, string> = {
 }
 
 export const translatePricebookByUser: Record<string, Record<string, string>> = {
-    'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
+    'devteam@visumdigital.pharmaesthetics': translatePricebookPROD,
     'leonardo@visumdigital.pharmaesthetics.qa': translatePricebookQA,
+    'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
+}
+
+export const translatePaymentConditionPROD: Record<string, string> = {
+    'À VISTA': 'À vista',
+    '30% DE ENTRADA + 6X SEM JUROS': '30% DE ENTRADA + 6X SEM JUROS',
+    '25% DE ENTRADA + 10X SEM JUROS': '25% DE ENTRADA + 10X SEM JUROS',
+    'A Vista': 'À vista',
+    'Entrada +6x': '30% DE ENTRADA + 6X SEM JUROS',
+    'Entrada +10x': '25% DE ENTRADA + 10X SEM JUROS',
 }
 
 export const translatePaymentConditionQA: Record<string, string> = {
@@ -39,6 +55,12 @@ export const translatePaymentConditionDEV: Record<string, string> = {
     'Entrada +10x': '25% Entrada +10x Sem Juros',
 }
 
+export const translatePaymentConditionByUser: Record<string, Record<string, string>> = {
+    'devteam@visumdigital.pharmaesthetics': translatePaymentConditionPROD,
+    'leonardo@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,
+    'leonardo@visumdigital.com.pharmaestheticsdev': translatePaymentConditionDEV,
+}
+
 export const translateApprovalLevel: Record<string, string> = {
     'Consultor': 'Consultor',
     'Gerente Regional': 'Gerente regional',
@@ -47,11 +69,6 @@ export const translateApprovalLevel: Record<string, string> = {
     'Gerente nacional': 'Gerente nacional',
     'Diretoria': 'Diretoria',
     'Diretor': 'Diretoria',
-}
-
-export const translatePaymentConditionByUser: Record<string, Record<string, string>> = {
-    'leonardo@visumdigital.com.pharmaestheticsdev': translatePaymentConditionDEV,
-    'leonardo@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,
 }
 
 export function chunkArray<T>(array: T[], size: number): T[][] {

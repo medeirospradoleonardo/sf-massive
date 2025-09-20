@@ -7,6 +7,7 @@ export async function loginToOrg(
     label: string,
     url: string = 'https://test.salesforce.com'
 ): Promise<Connection> {
+    url = username == 'devteam@visumdigital.pharmaesthetics' ? 'https://login.salesforce.com' : url;
     const conn = new jsforce.Connection({ loginUrl: url })
     const spinner = ora(`Conectando na org ${label}...`).start()
     try {
