@@ -5,6 +5,7 @@ import { getAllRecords, getMapPaymentConditionIdByName, getMapPricebookIdByName,
 import { loginToOrg } from './auth.js';
 
 const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v29.xlsx';
+const SHEET_NAME = 'nome da planilha'
 
 const pricebookByLevel = {
     'Geral': 'Consultor',
@@ -34,7 +35,7 @@ async function main() {
     const lPricingRuleItemToInsert = [];
     const mLabelsByCustomizedId: Record<string, SObjectRecord> = {};
 
-    const lExcelRows = Object.values(await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 2))?.[0];
+    const lExcelRows = (await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 2))[SHEET_NAME];
 
     for (const excelRow of lExcelRows) {
         const pricebookName = excelRow['Catálogo de preços'];
