@@ -13,7 +13,7 @@ export const translatePricebookPROD: Record<string, string> = {
 export const translatePricebookQA: Record<string, string> = {
     'Distribuidores': 'Catálogo distribuidores',
     'Geral': 'Catálogo geral',
-    'Speaker': 'Catálogo Speakers oficial'
+    'Speaker': 'Catálogo speakers oficial'
 }
 
 export const translatePricebookDEV: Record<string, string> = {
@@ -26,6 +26,7 @@ export const translatePricebookByUser: Record<string, Record<string, string>> = 
     'devteam@visumdigital.pharmaesthetics': translatePricebookPROD,
     'leonardo@visumdigital.pharmaesthetics.qa': translatePricebookQA,
     'leonardo@visumdigital.com.pharmaestheticsdev': translatePricebookDEV,
+    'devteam@visumdigital.pharmaesthetics.qa': translatePricebookQA,
 }
 
 export const translatePaymentConditionPROD: Record<string, string> = {
@@ -39,11 +40,11 @@ export const translatePaymentConditionPROD: Record<string, string> = {
 
 export const translatePaymentConditionQA: Record<string, string> = {
     'À VISTA': 'À vista',
-    '30% DE ENTRADA + 6X SEM JUROS': '30% Entrada +6x Sem Juros',
-    '25% DE ENTRADA + 10X SEM JUROS': '25% Entrada +10x Sem Juros',
+    '30% DE ENTRADA + 6X SEM JUROS': '30% DE ENTRADA + 6X SEM JUROS',
+    '25% DE ENTRADA + 10X SEM JUROS': '25% DE ENTRADA + 10X SEM JUROS',
     'A Vista': 'À vista',
-    'Entrada +6x': '30% Entrada +6x Sem Juros',
-    'Entrada +10x': '25% Entrada +10x Sem Juros',
+    'Entrada +6x': '30% DE ENTRADA + 6X SEM JUROS',
+    'Entrada +10x': '25% DE ENTRADA + 10X SEM JUROS',
 }
 
 export const translatePaymentConditionDEV: Record<string, string> = {
@@ -59,6 +60,7 @@ export const translatePaymentConditionByUser: Record<string, Record<string, stri
     'devteam@visumdigital.pharmaesthetics': translatePaymentConditionPROD,
     'leonardo@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,
     'leonardo@visumdigital.com.pharmaestheticsdev': translatePaymentConditionDEV,
+    'devteam@visumdigital.pharmaesthetics.qa': translatePaymentConditionQA,
 }
 
 export const translateApprovalLevel: Record<string, string> = {
