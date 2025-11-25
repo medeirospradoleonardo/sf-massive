@@ -4,8 +4,8 @@ import { excelToJson } from './excel.js';
 import { getAllRecords, getMapPaymentConditionIdByName, getMapPricebookIdByName, getMapProductByName, insertRecords, SObjectRecord, translateApprovalLevel, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js';
 import { loginToOrg } from './auth.js';
 
-const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v29.xlsx';
-const SHEET_NAME = 'nome da planilha'
+const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v30.xlsx';
+const SHEET_NAME = 'Parâmetros de aprovação'
 
 const pricebookByLevel = {
     'Geral': 'Consultor',

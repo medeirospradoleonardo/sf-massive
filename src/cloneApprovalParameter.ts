@@ -2,11 +2,12 @@ import 'dotenv/config'
 import { loginToOrg } from './auth.js'
 import { excelToJson, generateExcelReport } from './excel.js'
 import path from 'path'
-import { chunkArray, getAllRecords, getMapPaymentConditionIdByName, getMapPricebookIdByName, getMapProductByName, getPicklistMap, parsePercent, translateApprovalLevel, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
+import { chunkArray, getMapPaymentConditionIdByName, getMapPricebookIdByName, getMapProductByName, getPicklistMap, parsePercent, translateApprovalLevel, translatePaymentConditionByUser, translatePaymentConditionQA, translatePricebookByUser, translatePricebookQA } from './utils.js'
 import { RecordResult } from './excel.js'
 import ora from 'ora'
 
-const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v29.xlsx'
+const FILE_TO_READ_NAME = 'Parâmetros de aprovação - Pharmaesthetics v30.xlsx';
+const SHEET_NAME = 'Parâmetros de aprovação'
 const SOBJECT_NAME = 'CA_ParametroAprovacao__c'
 
 async function main() {
@@ -26,7 +27,7 @@ async function main() {
 
   const spinner = ora(`Clonando registros de ${SOBJECT_NAME}...`).start()
 
-  const lExcelRows = Object.values(await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 2))?.[0]
+  const lExcelRows = (await excelToJson(path.join(inputDir, FILE_TO_READ_NAME), 2))[SHEET_NAME];
 
   const lApprovalParameterToInsert = []
 
